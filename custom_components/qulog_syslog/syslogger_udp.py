@@ -21,7 +21,12 @@ class Syslog:
     mac_num = hex(uuid.getnode()).replace('0x', '').upper()
     mac = ':'.join(mac_num[i: i + 2] for i in range(0, 11, 2))
     return mac
-  
+
+  def get_ip_address(self):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect((self.sysserver, self.port))
+    return s.getsockname()[0]
+
   def send(self, application, process, message, level):
     data = ('<{priority}>1 {time} {hostname} {application} {process} - '
             '[QULOG@EVENT MAC="{mac}" IP="{ip}" USER="homeassistant" SOURCE="{hostname}" '
@@ -34,7 +39,7 @@ class Syslog:
         application=application, 
         process=process,
         mac=self.get_mac(),
-        ip=socket.gethostbyname(socket.getfqdn()),
+        ip=self.get_ip_address(),
         logmessage=message)
     sysloggercommon.LOGGER.debug("Sending UDP://{}:{} with data: {}".format(self.sysserver, self.port, data))
     self.socket.sendto(data.encode(), (self.sysserver, self.port))

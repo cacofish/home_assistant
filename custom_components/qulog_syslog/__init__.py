@@ -40,8 +40,8 @@ def setup(hass, config):
         protocol = config[DOMAIN][CONF_PROTOCOL]
         sysloggercommon.LOGGER.debug("Server: {}://{}:{}".format(protocol, sysserver, port))
         facility = call.data.get(ATTR_FACILITY, "USER")
-        application = call.data.get(ATTR_APPLICATION, DEFAULT_APPLICATION)
-        process = call.data.get(ATTR_PROCESS, DEFAULT_PROCESS)
+        application = call.data.get(ATTR_APPLICATION, DEFAULT_APPLICATION).replace(" ", "_")
+        process = call.data.get(ATTR_PROCESS, DEFAULT_PROCESS).replace(" ", "_")
 
         messagetext = call.data.get(ATTR_MESSAGE, DEFAULT_MESSAGE)
         loglevel = call.data.get(ATTR_LOGLEVEL, DEFAULT_LOGLEVEL)     
