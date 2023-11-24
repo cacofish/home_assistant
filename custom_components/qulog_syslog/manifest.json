@@ -1,0 +1,14 @@
+{
+    "domain": "qulog_syslog",
+    "name": "Qulog Remote Syslogger",
+    "version": "1.0.0",
+    "documentation": "https://github.com/cacofish/home_assistant/custom_components/qulog_syslog",
+    "issue_tracker": "https://github.com/cacofish/home_assistant/issues",
+    "dependencies": [],
+    "after_dependencies": ["http"],
+    "codeowners": ["@cacofish"],
+    "requirements": [],
+    "iot_class": "assumed_state",  
+    "config_flow": false,
+    "loggers": ["custom_components.qulog_syslog"]
+  }
