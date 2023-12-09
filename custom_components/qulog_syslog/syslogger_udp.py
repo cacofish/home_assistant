@@ -27,17 +27,18 @@ class Syslog:
     s.connect((self.sysserver, self.port))
     return s.getsockname()[0]
 
-  def send(self, application, process, message, level):
-    data = ('<{priority}>1 {time} {hostname} {application} {process} - '
+  def send(self, application, process, messageid, message, level):
+    data = ('<{priority}>1 {time} {hostname} {application} {process} {messageid} '
             '[QULOG@EVENT MAC="{mac}" IP="{ip}" USER="homeassistant" SOURCE="{hostname}" '
-            'COMPUTER="" APPLICATION="" APPLICATION_ID="" CATEGORY="" CATEGORY_ID="" '
-            'MESSAGE_ID="" EXTRA_DATA="" CLIENT_ID="" CLIENT_APP="" CLIENT_AGENT=""]'
+            'COMPUTER="" APPLICATION="{process}" APPLICATION_ID="" CATEGORY="{messageid}" CATEGORY_ID="" '
+            'MESSAGE_ID="" EXTRA_DATA="" CLIENT_ID="" CLIENT_APP="{application}" CLIENT_AGENT=""]'
             ' {logmessage}').format(
         priority=(level + self.facility*8), 
         time=datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
         hostname=socket.gethostname(), 
         application=application, 
         process=process,
+        messageid=messageid,
         mac=self.get_mac(),
         ip=self.get_ip_address(),
         logmessage=message)

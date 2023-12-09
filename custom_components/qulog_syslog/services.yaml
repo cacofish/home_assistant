@@ -83,6 +83,14 @@ logmessage:
       default: "lights"
       selector:
         text:
+    messageid:
+      name: message id
+      description: Syslog message id (no spaces)
+      required: false
+      advanced: false
+      example: "front door lights"
+      selector:
+        text:
     message:
       name: message
       description: The message to be logged

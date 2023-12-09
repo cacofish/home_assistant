@@ -25,11 +25,10 @@ ATTR_FACILITY = "facility"
 ATTR_APPLICATION = "application"
 DEFAULT_APPLICATION = "ha_script"
 ATTR_PROCESS = "process"
-DEFAULT_PROCESS = "-"
-
+ATTR_MESSAGE_ID = "messageid"
+DEFAULT_NOVALUE = "-"
 ATTR_MESSAGE = "message"
 DEFAULT_MESSAGE = "Default Log Message"
-
 ATTR_LOGLEVEL = "loglevel"
 DEFAULT_LOGLEVEL = "info"
 
@@ -41,18 +40,20 @@ def setup(hass, config):
         sysloggercommon.LOGGER.debug("Server: {}://{}:{}".format(protocol, sysserver, port))
         facility = call.data.get(ATTR_FACILITY, "USER")
         application = call.data.get(ATTR_APPLICATION, DEFAULT_APPLICATION).replace(" ", "_")
-        process = call.data.get(ATTR_PROCESS, DEFAULT_PROCESS).replace(" ", "_")
+        process = call.data.get(ATTR_PROCESS, DEFAULT_NOVALUE).replace(" ", "_")
+        messageid = call.data.get(ATTR_MESSAGE_ID, DEFAULT_NOVALUE).replace(" ", "_")
 
         messagetext = call.data.get(ATTR_MESSAGE, DEFAULT_MESSAGE)
         loglevel = call.data.get(ATTR_LOGLEVEL, DEFAULT_LOGLEVEL)     
         
+        sysloggercommon.LOGGER.debug("call apis")
         try:
           if ("TCP" == protocol):
             log = syslogger_tcp.Syslog(sysserver, port, sysloggercommon.sysfacility(facility))
-            log.send(application, process, messagetext, sysloggercommon.sysloglevel(loglevel))
+            log.send(application, process, messageid, messagetext, sysloggercommon.sysloglevel(loglevel))
           else:
             log = syslogger_udp.Syslog(sysserver, port, sysloggercommon.sysfacility(facility))
-            log.send(application, process, messagetext, sysloggercommon.sysloglevel(loglevel))
+            log.send(application, process, messageid, messagetext, sysloggercommon.sysloglevel(loglevel))
         except Exception as e:
           sysloggercommon.LOGGER.error("Problem sending to Remote Syslog server, ", str(e))
 
